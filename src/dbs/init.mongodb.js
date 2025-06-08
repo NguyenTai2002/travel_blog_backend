@@ -1,13 +1,7 @@
 'use-strict'
-
-
 import mongoose from 'mongoose'
 import { countConnect } from '../helpers/check.connect.js'
-import  config  from '../configs/config.mongodb.js'
-
-
-
-console.log(config);
+import  config  from '../configs/environment.js'
 
 const {host, name, port} = config.db
 const connectString = `mongodb://${host}:${port}/${name}`
@@ -16,7 +10,6 @@ class Database {
   constructor() {
     this.connect()
   }
-
 
   connect(type = 'mongodb') {
 

@@ -4,27 +4,28 @@ import helmet from 'helmet'
 import compression from 'compression'
 import './dbs/init.mongodb.js'
 import 'dotenv/config'
-import { checkOverload } from './helpers/check.connect.js'
+import bodyParser from 'body-parser'
+import { API_V1 } from './routes/v1/index.js'
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
+import { urlMismatchMiddleware } from './middlewares/URLMismatchMiddleware'
 const app = express()
 
 // init middleware
-//HTTP request logger middleware for node.js
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
 app.use(morgan("dev"))
-//Help secure Express apps by setting HTTP response headers.  
 app.use(helmet())
-//compression
 app.use(compression())
 
-checkOverload()
+// checkOverload()
 
-app.get('/', (req, res, next) => { 
-  const strCompress = 'Hello world'
+app.use('/api/v1', API_V1)
 
-  return res.status(200).json({
-    message: 'Welcome to app',
-    metadata: strCompress.repeat(1000000)
-  })
-})
+app.use(urlMismatchMiddleware)
 
+app.use(errorHandlingMiddleware)
 
 export default app
