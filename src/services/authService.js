@@ -77,39 +77,39 @@ const login = async ({email, password, refreshToken = null}) => {
 
 
 const logout = async (keyStore) => {
+
   const deleteKey = await keyTokenRepository.deleteOneById(keyStore._id)
 
   return deleteKey
   
 }
 
-const handleRefreshToken = async (refreshToken) => {
+const handleRefreshToken = async ({refreshToken, keyStore, user}) => {
 
-  // mỗi refresh-token chỉ được refresh một lần
+  const {userId, email} = user
 
-  const usedToken = await keyTokenRepository.findByRefreshTokenUsed(refreshToken)
 
-  if (usedToken) {
-    const {userId, email} = await authUtils.verifyToken(refreshToken, usedToken.privateKey)
+  if (keyStore.refreshTokensUsed.includes(refreshToken)) {
 
     await keyTokenRepository.deleteByUserId(userId)
 
     throw new ForbiddenError('Something wrong happen, pls re-login')
   }
 
-  const holderToken = await keyTokenRepository.findOneByRefreshToken(refreshToken)
-  if (!holderToken) throw new AuthFailureError('User not registered')
 
-  const { userId, email } = await authUtils.verifyToken(refreshToken, holderToken.privateKey)
+  if (keyStore.refreshToken !== refreshToken) {
+    throw new ForbiddenError('User not registered')
+  }
+
 
   const foundUser = await userRepository.findOneByEmail(email)
-  if (!foundUser) throw new AuthFailureError('User not registered')
+  if (!foundUser) throw new ForbiddenError('User not registered')
 
-  const tokens = await authUtils.createTokenPair({ userId, email }, holderToken.publicKey, holderToken.privateKey)  
+
+  const tokens = await authUtils.createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey) 
 
   //update token into refreshTokensUsed
   //apply atomic update
-
   await keyTokenRepository.updateTokensUsed(tokens.refreshToken, refreshToken)
 
   return {

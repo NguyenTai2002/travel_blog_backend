@@ -1,7 +1,11 @@
 console.log('babel running');
 
 import app  from '~/app'
-const PORT = process.env.PORT || 3000
+import config from './src/configs/environment'
+
+const PORT = config.app.port
+
+
 
 
 const server = app.listen(PORT, () => { 

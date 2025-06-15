@@ -1,25 +1,25 @@
 import express from 'express'
 import expressAsyncHandler from 'express-async-handler'
-import { userController } from '~/controllers/authController'
-import authentication from '~/middlewares/authenticationMiddleware'
+import { authController} from '~/controllers/authController'
+import authentication, { authenticationV2 } from '~/middlewares/authenticationMiddleware'
 const router = express.Router()
 
 
 
 router.route('/signup')
-  .post(expressAsyncHandler(userController.signUp))
+  .post(expressAsyncHandler(authController.signUp))
 
 router.route('/login')
-  .post(expressAsyncHandler(userController.login))
+  .post(expressAsyncHandler(authController.login))
 
 
-router.use(authentication)  
+router.use(authenticationV2)
 
 router.route('/logout')  
-  .post(expressAsyncHandler(userController.logout))
+  .post(expressAsyncHandler(authController.logout))
  
 router.route('/refresh-token')  
-  .post(expressAsyncHandler(userController.refreshToken))
+  .post(expressAsyncHandler(authController.refreshToken))
  
   
 export const authRoute = router

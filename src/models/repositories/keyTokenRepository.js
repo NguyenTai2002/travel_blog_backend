@@ -10,7 +10,7 @@ const findOneAndUpdate = async (filter, update, options) => {
 }
 
 const findOneByUserId = async (userId) => {
-  return await keyTokenModel.findOne({user: new mongoose.Types.ObjectId(userId)}).lean()
+  return await keyTokenModel.findOne({user: new mongoose.Types.ObjectId(userId)})
 }
 
 const findOneByRefreshToken = async (refreshToken) => {

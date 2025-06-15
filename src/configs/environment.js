@@ -9,7 +9,8 @@ const dev = {
     host: process.env.DEV_DB_HOST || '127.0.0.1',
     port: process.env.DEV_DB_PORT || 27017,
     name: process.env.DEV_DB_NAME || 'travel_blog'
-  }
+  },
+  allowOrigin: process.env.DEV_ALLOW_ORIGIN || 'http://localhost:5173'
 }
 
 
@@ -22,7 +23,8 @@ const prod = {
     host: process.env.PRO_DB_HOST || '127.0.0.1',
     port: process.env.PRO_DB_HOST || 27017,
     name: process.env.PRO_DB_HOST || 'dbProd'
-  }
+  },
+  allowOrigin: process.env.PRO_ALLOW_ORIGIN || 'http://localhost:5173'
 }
 
 
