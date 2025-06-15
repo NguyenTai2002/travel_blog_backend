@@ -6,6 +6,7 @@ class ErrorResponse extends Error {
     super(message)
     this.status = status
     this.name = 'ApiError'
+    this.stack = this.stack || ''
     Error.captureStackTrace(this, this.constructor)
   }
 }

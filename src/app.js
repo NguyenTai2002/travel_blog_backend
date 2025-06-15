@@ -8,10 +8,16 @@ import bodyParser from 'body-parser'
 import { API_V1 } from './routes/v1/index.js'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import { urlMismatchMiddleware } from './middlewares/URLMismatchMiddleware'
+import cors from 'cors'
+import corsOptions from './configs/corsOptions.js'
+import cookieParser from 'cookie-parser'
 const app = express()
 
 // init middleware
 
+
+app.use(cors(corsOptions))
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
